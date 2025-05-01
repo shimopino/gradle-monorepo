@@ -1,0 +1,12 @@
+<Configuration>
+  <Appenders>
+    <Lambda name="Lambda" format="${env:AWS_LAMBDA_LOG_FORMAT:-JSON}">
+      <LambdaLayout pattern="%d{ISO8601} %p %c{1} [%X{AWSRequestId}] - %m%n"/>
+    </Lambda>
+  </Appenders>
+  <Loggers>
+    <Root level="${env:AWS_LAMBDA_LOG_LEVEL:-INFO}">
+      <AppenderRef ref="Lambda"/>
+    </Root>
+  </Loggers>
+</Configuration>

@@ -1,0 +1,21 @@
+<Configuration>
+  <Appenders>
+    <Lambda name="Lambda" format="${env:AWS_LAMBDA_LOG_FORMAT:-JSON}">
+      <!-- <JsonLayout eventEol="true" compact="true" includeStacktrace="true" properties="true"/> -->
+      <LambdaJSONFormat>
+        <JsonTemplateLayout eventTemplateUri="classpath:LambdaLayout.json" />
+      </LambdaJSONFormat>
+      <LambdaTextFormat>
+        <PatternLayout>
+          <pattern>%d{yyyy-MM-dd HH:mm:ss} %X{AWSRequestId} %-5p %c{1} - %m%n </pattern>
+        </PatternLayout>
+      </LambdaTextFormat>
+    </Lambda>
+  </Appenders>
+  <Loggers>
+    <Root level="${env:AWS_LAMBDA_LOG_LEVEL:-INFO}">
+      <AppenderRef ref="Lambda"/>
+    </Root>
+    <Logger name="software.amazon.awssdk" level="WARN" />
+  </Loggers>
+</Configuration>

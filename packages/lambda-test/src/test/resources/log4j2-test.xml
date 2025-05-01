@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5p %c{1} - %m%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <!-- LocalStackのログを出力しない -->
+    <Logger name="LocalStack" level="off" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <!-- Testcontainersのログを出力しない -->
+    <Logger name="org.testcontainers" level="off" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <!-- それ以外はエラーのみ表示 -->
+    <Root level="error">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration> 
