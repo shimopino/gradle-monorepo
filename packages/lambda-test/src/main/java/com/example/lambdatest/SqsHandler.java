@@ -1,13 +1,20 @@
 package com.example.lambdatest;
 
+import java.net.URI;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.example.common.Person;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 
@@ -21,7 +28,19 @@ public class SqsHandler implements RequestHandler<SQSEvent, Void> {
 
   /** デフォルトコンストラクタ：環境変数とデフォルトクライアントを使用 */
   public SqsHandler() {
-    this(SqsClient.builder().build(), System.getenv("TARGET_QUEUE_URL"));
+    this(
+        SqsClient.builder()
+            .endpointOverride(URI.create(System.getenv("AWS_ENDPOINT_OVERRIDE_SQS")))
+            .region(Region.of(System.getenv("AWS_DEFAULT_REGION")))
+            .credentialsProvider(
+                StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(
+                        System.getenv("AWS_ACCESS_KEY_ID"),
+                        System.getenv("AWS_SECRET_ACCESS_KEY")))
+            )
+            .build(),
+        System.getenv("TARGET_QUEUE_URL")
+    );
   }
 
   /** テスト用コンストラクタ：クライアントとキューURLを外部から注入可能 */
