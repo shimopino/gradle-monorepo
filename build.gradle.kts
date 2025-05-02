@@ -16,7 +16,10 @@ plugins {
 subprojects {
     apply(plugin = "java-library")
     java {
-        toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+            vendor.set(JvmVendorSpec.AMAZON)
+        }
     }
 
     tasks.withType<Test> {
@@ -30,5 +33,15 @@ subprojects {
             target("src/**/*.java")
             removeUnusedImports()
         }
+    }
+
+    tasks.withType<JavaCompile>().configureEach {
+        options.isFork = true
+        options.isIncremental = true
+    }
+
+    tasks.withType<Test>().configureEach {
+        reports.html.required = false
+        reports.junitXml.required = false
     }
 }

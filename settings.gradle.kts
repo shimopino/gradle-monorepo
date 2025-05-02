@@ -7,6 +7,8 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories { mavenCentral() }
+    // https://docs.gradle.org/current/userguide/version_catalogs.html#sec:importing-catalog-from-file
+    // Gradleは名前から自動読み取りを行うためファイル指定は不要
     versionCatalogs {
         create("libs")
     }
